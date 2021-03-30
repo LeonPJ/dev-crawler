@@ -11,7 +11,8 @@ async function seven() {
     const sevenPage = 'https://myship2.7-11.com.tw/C2C/Page02';// 7-11 package value page
     await driver.get(sevenPage);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`)));// wait page ready
-    //here
+
+    //page 02
     await driver.findElement(By.xpath('//*[@id="shippingValue"]')).click();// open select
     await driver.findElement(By.xpath('//*[@id="shippingValue"]/option[2]')).click();// select 1000
 
@@ -20,6 +21,36 @@ async function seven() {
 
     const nextStep = await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`)));
     nextStep.click();
+
+    //page 03
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/div/div[2]/div[1]`)));
+    //寄件人姓名
+    const senderName = await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderName"]`)));
+    senderName.sendKeys("寄件人測試");
+    //寄件人手機
+    const senderPhone = await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderPhone"]`)));
+    senderPhone.sendKeys("0912345678");
+    //寄件人mail
+    const senderEmail = await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderEmail"]`)));
+    senderEmail.sendKeys("test@gmail.com");
+
+    const parentWindow = await driver.getWindowHandle();// 起始主視窗ID
+    // 退貨門市名稱
+    const returnStore = await driver.wait(until.elementLocated(By.xpath(`//*[@id="checkStore"]`)));
+    returnStore.click();
+
+    await driver.wait(async () => (await driver.getAllWindowHandles()).length === 2);//確認是否開啟第二個視窗
+
+    const windows = await driver.getAllWindowHandles();// 抓取所有視窗ID
+    windows.forEach(async handle => {
+        if (handle !== parentWindow) {
+            await driver.switchTo().window(handle);
+        }
+    });
+
+    await driver.wait(until.titleIs('電子地圖查詢系統'));
+    console.log("you are in child window");
+
 }
 
 seven();
