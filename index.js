@@ -17,8 +17,7 @@ async function seven() {
     await driver.findElement(By.xpath('//*[@id="shippingValue"]/option[2]')).click();// select 1000
 
     const enterPrice = await driver.wait(until.elementLocated(By.xpath(`//*[@id="orderAmount"]`)));// enter price
-    enterPrice.sendKeys("1000");// 1000, 2000, 3000, 4000, 5000
-
+    enterPrice.sendKeys("1000");
     const nextStep = await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`)));
     nextStep.click();
 
@@ -35,7 +34,7 @@ async function seven() {
     senderEmail.sendKeys("test@gmail.com");
 
     const parentWindow = await driver.getWindowHandle();// 起始主視窗ID
-    // 退貨門市名稱
+    // 退貨門市視窗
     const returnStore = await driver.wait(until.elementLocated(By.xpath(`//*[@id="checkStore"]`)));
     returnStore.click();
 
@@ -48,8 +47,18 @@ async function seven() {
         }
     });
 
-    await driver.wait(until.titleIs('電子地圖查詢系統'));
-    console.log("you are in child window");
+    // 退貨門市視窗
+    await driver.wait(until.titleIs('電子地圖查詢系統'));// 等待 進入新視窗
+
+    const selectByName = await driver.wait(until.elementLocated(By.xpath(`//*[@id="byName"]/a`)));
+    selectByName.click();
+
+
+    await driver.wait(until.elementLocated(By.css('input')));// 等待 更新完畢
+    await driver.wait(until.elementLocated(By.id("storeNameKey"))).sendKeys("康寧");
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="send"]`))).click();
+
+    console.log("success!!");
 
 }
 
