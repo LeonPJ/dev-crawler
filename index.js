@@ -50,16 +50,22 @@ async function seven() {
     // 退貨門市視窗
     await driver.wait(until.titleIs('電子地圖查詢系統'));// 等待 進入新視窗
 
-    const selectByName = await driver.wait(until.elementLocated(By.xpath(`//*[@id="byName"]/a`)));
+    const selectByName = await driver.wait(until.elementLocated(By.xpath(`//*[@id="byID"]/a`)));
     selectByName.click();
 
+    await driver.sleep(1000);
+    await driver.switchTo().frame(0);
 
-    await driver.wait(until.elementLocated(By.css('input')));// 等待 更新完畢
-    await driver.wait(until.elementLocated(By.id("storeNameKey"))).sendKeys("康寧");
+    await driver.wait(until.elementLocated(By.id(`storeIDKey`))).sendKeys("148133");
+    // await driver.wait(until.elementLocated(By.id("storeIDKey"))).sendKeys("");
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="send"]`))).click();
-
-    console.log("success!!");
-
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="ol_stores"]/li`))).click();
+    await driver.switchTo().parentFrame();
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="sevenDataBtn"]`))).click();
+    await driver.sleep(500);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="AcceptBtn"]`))).click();
+    await driver.sleep(500);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="submit_butn"]`))).click();   
 }
 
 seven();
