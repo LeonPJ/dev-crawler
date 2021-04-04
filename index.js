@@ -53,11 +53,10 @@ async function seven() {
     const selectByName = await driver.wait(until.elementLocated(By.xpath(`//*[@id="byID"]/a`)));
     selectByName.click();
 
-    await driver.sleep(1000);
+    await driver.sleep(500);
     await driver.switchTo().frame(0);
 
     await driver.wait(until.elementLocated(By.id(`storeIDKey`))).sendKeys("148133");
-    // await driver.wait(until.elementLocated(By.id("storeIDKey"))).sendKeys("");
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="send"]`))).click();
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="ol_stores"]/li`))).click();
     await driver.switchTo().parentFrame();
