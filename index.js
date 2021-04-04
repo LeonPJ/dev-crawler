@@ -1,8 +1,6 @@
 
 //require('dotenv').config();
 import webdriver, { Builder, By, Key, until } from 'selenium-webdriver';
-//import chrome from 'selenium-webdriver/chrome';
-//const options = new.browser.Options();
 
 async function seven() {
     let driver = await new webdriver.Builder().forBrowser('chrome').build();
@@ -16,27 +14,21 @@ async function seven() {
     await driver.findElement(By.xpath('//*[@id="shippingValue"]')).click();// open select
     await driver.findElement(By.xpath('//*[@id="shippingValue"]/option[2]')).click();// select 1000
 
-    const enterPrice = await driver.wait(until.elementLocated(By.xpath(`//*[@id="orderAmount"]`)));// enter price
-    enterPrice.sendKeys("1000");
-    const nextStep = await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`)));
-    nextStep.click();
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="orderAmount"]`))).sendKeys("1000");// enter price
+
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`))).click();// next page
 
     //page 03
     await driver.wait(until.elementLocated(By.xpath(`/html/body/div/div[2]/div[1]`)));
     //寄件人姓名
-    const senderName = await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderName"]`)));
-    senderName.sendKeys("寄件人測試");
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderName"]`))).sendKeys("寄件人測試");
     //寄件人手機
-    const senderPhone = await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderPhone"]`)));
-    senderPhone.sendKeys("0912345678");
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderPhone"]`))).sendKeys("0912345678");
     //寄件人mail
-    const senderEmail = await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderEmail"]`)));
-    senderEmail.sendKeys("test@gmail.com");
-
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderEmail"]`))).sendKeys("receive@gmail.com");
     const parentWindow = await driver.getWindowHandle();// 起始主視窗ID
     // 退貨門市視窗
-    const returnStore = await driver.wait(until.elementLocated(By.xpath(`//*[@id="checkStore"]`)));
-    returnStore.click();
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="checkStore"]`))).click();
 
     await driver.wait(async () => (await driver.getAllWindowHandles()).length === 2);//確認是否開啟第二個視窗
 
@@ -47,19 +39,44 @@ async function seven() {
         }
     });
 
-    // 退貨門市視窗
-    await driver.wait(until.titleIs('電子地圖查詢系統'));// 等待 進入新視窗
+    // 退貨門市選擇
+    await driver.wait(until.titleIs('電子地圖查詢系統'));// 等待 電子地圖查詢系統
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="byID"]/a`))).click();// 門市店號
 
-    const selectByName = await driver.wait(until.elementLocated(By.xpath(`//*[@id="byName"]/a`)));
-    selectByName.click();
-
-
-    await driver.wait(until.elementLocated(By.css('input')));// 等待 更新完畢
-    await driver.wait(until.elementLocated(By.id("storeNameKey"))).sendKeys("康寧");
+    await driver.sleep(500);
+    await driver.switchTo().frame(0);// Switches to the first frame
+    await driver.wait(until.elementLocated(By.id(`storeIDKey`))).sendKeys("148133");
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="send"]`))).click();
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="ol_stores"]/li`))).click();
+    await driver.switchTo().parentFrame();
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="sevenDataBtn"]`))).click();
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="AcceptBtn"]`)));
+    await driver.sleep(500);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="AcceptBtn"]`))).click();
+    await driver.sleep(500);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="submit_butn"]`))).click();
+    await driver.switchTo().window(parentWindow);// back to main window
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`))).click();// next page
 
-    console.log("success!!");
+    // page 04
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/div[1]/div[2]/div[2]/div/div[1]/div[1]`)));
 
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="receiverName"]`))).sendKeys("收件人測試");
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="receiverPhone"]`))).sendKeys("0987654321");
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="receiverEmail"]`))).sendKeys("send@gmail.com");
+
+    //parentWindow = await driver.getWindowHandle();// 起始主視窗ID
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="checkStore"]`))).click();// 收件門市
+    await driver.wait(async () => (await driver.getAllWindowHandles()).length === 2);//確認是否開啟第二個視窗
+    //console.log("success to page 4");
+    const windows = await driver.getAllWindowHandles();// 抓取所有視窗ID
+    windows.forEach(async handle => {
+        if (handle !== parentWindow) {
+            await driver.switchTo().window(handle);
+        }
+    });
+
+    await "吃飽";
 }
 
 seven();
