@@ -1,11 +1,18 @@
 
 //require('dotenv').config();
 import webdriver, { Builder, By, Key, until } from 'selenium-webdriver';
+import chrome from 'selenium-webdriver/chrome.js';
 import fs from 'fs';
 import QRCode from 'qrcode';
+import { createHook } from 'async_hooks';
+
 async function seven() {
-    let driver = await new webdriver.Builder().forBrowser('chrome').build();
-    await driver.manage().window().setRect({ width: 1200, height: 800, x: 0, y: 0 });// set browser windows size
+    //let driver = await new webdriver.Builder().forBrowser('chrome').build();
+    //await driver.manage().window().setRect({ width: 1200, height: 800, x: 0, y: 0 });// set browser windows size
+
+    var driver = await new Builder().forBrowser('chrome')
+        .setChromeOptions(new chrome.Options().addArguments('--headless'))
+        .build();
 
     const sevenPage = 'https://myship2.7-11.com.tw/C2C/Page02';// 7-11 package value page
     await driver.get(sevenPage);
