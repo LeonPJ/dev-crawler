@@ -12,7 +12,9 @@
   "dependencies": {
     "chromedriver": "^89.0.0",
     "dotenv": "^8.2.0",
-    "selenium-webdriver": "^4.0.0-beta.1",
+    "fs": "^0.0.1-security",
+    "qrcode": "^1.4.4",
+    "selenium-webdriver": "^4.0.0-beta.2",
     "yarn": "^1.22.10"
   }
 }
