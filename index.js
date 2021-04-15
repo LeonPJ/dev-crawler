@@ -4,15 +4,34 @@ import webdriver, { Builder, By, Key, until } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 import fs from 'fs';
 import QRCode from 'qrcode';
-import { createHook } from 'async_hooks';
+
+//import { createWorker } from 'tesseract.js';
+
+import Jimp from 'jimp';
+
+/*const worker = createWorker({
+    logger: m => console.log(m)
+});*/
+
+/*async function family() {
+    await worker.load();
+    await worker.loadLanguage('eng');
+    await worker.initialize('eng');
+    //const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+    //const { data: { text } } = await worker.recognize('./hello-world.png');
+    const { data: { text } } = await worker.recognize('./g.png');
+    console.log(text);
+    await worker.terminate();
+}*/
+
+/*var driver = await new Builder().forBrowser('chrome')
+    //.setChromeOptions(new chrome.Options().addArguments('--headless'))
+    .setChromeOptions(new chrome.Options().addArguments())
+    .build();*/
 
 async function seven() {
     //let driver = await new webdriver.Builder().forBrowser('chrome').build();
     //await driver.manage().window().setRect({ width: 1200, height: 800, x: 0, y: 0 });// set browser windows size
-
-    var driver = await new Builder().forBrowser('chrome')
-        .setChromeOptions(new chrome.Options().addArguments('--headless'))
-        .build();
 
     const sevenPage = 'https://myship2.7-11.com.tw/C2C/Page02';// 7-11 package value page
     await driver.get(sevenPage);
@@ -137,4 +156,32 @@ async function seven() {
     await driver.quit();// close windows
 }
 
-seven();
+async function family() {
+    /*const familyPage = 'https://ap.family.com.tw/V3/Member/Login?mem_infoREYI=Ti2s5PMxPhkafJpPPXHbjwRpRu5ZXig48E%2BEWuyaYRwp32UfICUvjdz1cVcTE2IguUwxvpyUVKlS6k2QlbcMfVtzRyVOdgGzjJG05%2Bi41vaVGIBCf2bRyFEUBdCEh%2Bf2jyX9bS3E3lq%2BtCTxvcniLI1Ltuct%2BZtgeScgzoG6nro%3D';// family package value page
+    await driver.get(familyPage);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="account"]`))).sendKeys("0975521102");
+    await driver.sleep(1000);*/
+    //Jimp.read('./a.png', (err, image) => {
+    //if (err) throw err;
+    //image
+    //.resize(840, 600) // resize
+    //.quality(100) // set JPEG quality
+    //.write('result.png'); // save
+    //});
+
+    Jimp.read('./a.png')
+        .then(image => {
+            image
+                .resize(840, 600) // resize
+                //.crop(100, 100, 100, 100)
+                .write('result.png'); // save
+            console.log("crop success!!");
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+}
+
+family();
+//seven();
