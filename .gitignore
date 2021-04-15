@@ -1,3 +1,5 @@
 # Folders to ignore
 node_modules
 .env
+.db
+./img
