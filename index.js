@@ -5,24 +5,9 @@ import chrome from 'selenium-webdriver/chrome.js';
 import fs from 'fs';
 import QRCode from 'qrcode';
 
-//import { createWorker } from 'tesseract.js';
-
 import Jimp from 'jimp';
 
-/*const worker = createWorker({
-    logger: m => console.log(m)
-});*/
-
-/*async function family() {
-    await worker.load();
-    await worker.loadLanguage('eng');
-    await worker.initialize('eng');
-    //const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
-    //const { data: { text } } = await worker.recognize('./hello-world.png');
-    const { data: { text } } = await worker.recognize('./g.png');
-    console.log(text);
-    await worker.terminate();
-}*/
+import Tesseract from 'tesseract.js';
 
 /*var driver = await new Builder().forBrowser('chrome')
     //.setChromeOptions(new chrome.Options().addArguments('--headless'))
@@ -161,25 +146,126 @@ async function family() {
     await driver.get(familyPage);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="account"]`))).sendKeys("0975521102");
     await driver.sleep(1000);*/
-    //Jimp.read('./a.png', (err, image) => {
-    //if (err) throw err;
-    //image
-    //.resize(840, 600) // resize
-    //.quality(100) // set JPEG quality
-    //.write('result.png'); // save
-    //});
 
-    Jimp.read('./a.png')
+    await Jimp.read('./CaptchaImage.png')
         .then(image => {
             image
-                .resize(840, 600) // resize
-                //.crop(100, 100, 100, 100)
-                .write('result.png'); // save
-            console.log("crop success!!");
+                .resize(560, 200)
+                .crop(30, 0, 70, 200)
+                .write('1.png');
+            console.log("1 success!!");
         })
         .catch(err => {
             console.log(err);
         });
+
+    await Jimp.read('./CaptchaImage.png')
+        .then(image => {
+            image
+                .resize(560, 200)
+                .crop(120, 0, 80, 200)
+                .write('2.png');
+            console.log("2 success!!");
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+    await Jimp.read('./CaptchaImage.png')
+        .then(image => {
+            image
+                .resize(560, 200)
+                .crop(200, 0, 80, 200)
+                .write('3.png');
+            console.log("3 success!!");
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+    await Jimp.read('./CaptchaImage.png')
+        .then(image => {
+            image
+                .resize(560, 200)
+                .crop(280, 0, 80, 200)
+                .write('4.png');
+            console.log("4 success!!");
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+    await Jimp.read('./CaptchaImage.png')
+        .then(image => {
+            image
+                .resize(560, 200)
+                .crop(360, 0, 80, 200)
+                .write('5.png');
+            console.log("5 success!!");
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+    await Jimp.read('./CaptchaImage.png')// forth
+        .then(image => {
+            image
+                .resize(560, 200)
+                .crop(440, 0, 80, 200)
+                .write('6.png');
+            console.log("6 success!!");
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+    Tesseract.recognize(
+        './1.png',
+        'eng',
+        { logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+        console.log(text);
+    })
+
+    /*Tesseract.recognize(
+        './2.png',
+        'eng',
+        //{ logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+        console.log(text);
+    })
+
+    Tesseract.recognize(
+        './3.png',
+        'eng',
+        //{ logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+        console.log(text);
+    })
+
+    Tesseract.recognize(
+        './4.png',
+        'eng',
+        //{ logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+        console.log(text);
+    })
+
+    Tesseract.recognize(
+        './5.png',
+        'eng',
+        //{ logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+        console.log(text);
+    })
+
+    Tesseract.recognize(
+        './6.png',
+        'eng',
+        //{ logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+        console.log(text);
+    })*/
 
 }
 
