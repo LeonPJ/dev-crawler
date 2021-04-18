@@ -523,10 +523,15 @@ async function sevenC2C_Payment() {
 
 
 async function family() {
-    /*const familyPage = 'https://ap.family.com.tw/V3/Member/Login?mem_infoREYI=Ti2s5PMxPhkafJpPPXHbjwRpRu5ZXig48E%2BEWuyaYRwp32UfICUvjdz1cVcTE2IguUwxvpyUVKlS6k2QlbcMfVtzRyVOdgGzjJG05%2Bi41vaVGIBCf2bRyFEUBdCEh%2Bf2jyX9bS3E3lq%2BtCTxvcniLI1Ltuct%2BZtgeScgzoG6nro%3D';// family package value page
+    const familyPage = 'https://ap.family.com.tw/V3/Member/Login?mem_infoREYI=Ti2s5PMxPhkafJpPPXHbjwRpRu5ZXig48E%2BEWuyaYRwp32UfICUvjdz1cVcTE2IguUwxvpyUVKlS6k2QlbcMfVtzRyVOdgGzjJG05%2Bi41vaVGIBCf2bRyFEUBdCEh%2Bf2jyX9bS3E3lq%2BtCTxvcniLI1Ltuct%2BZtgeScgzoG6nro%3D';// family package value page
     await driver.get(familyPage);
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="account"]`))).sendKeys("0975521102");
-    await driver.sleep(1000);*/
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="account"]`))).sendKeys(process.env.PHONE_NUMBER);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="password"]`))).sendKeys(process.env.PASSWORD);
+    await driver.sleep(1000);
+    let ele = await driver.findElement(By.className('captcha-img'));
+    // Captures the element screenshot
+    let encodedString = await ele.takeScreenshot(true);
+    await fs.writeFileSync('./CaptchaImage.png', encodedString, 'base64');
     const targetFilename = 'CaptchaImage.png';
     const image = await Jimp.read(targetFilename);
     await image.resize(560, 200).crop(30, 0, 80, 200).write('1.png');
@@ -559,13 +564,17 @@ async function family() {
     results.push(await worker.recognize('6.png'));
 
     const result = results.map((res) => res.data.text.toUpperCase().replace('\n', '')).join('').replace(' ', '');
-    console.log(result);
+    //console.log(result);
+
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="captcha"]`))).sendKeys(result);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="btn_login"]`))).click();
+
 }
 
 
 //sevenC2C();// 取貨不付款-一般材積
 //sevenLC2C();// 取貨不付款-120cm材積
 //sevenEC2C();// 取貨不付款-經濟交貨便
-sevenC2C_Payment();// 取貨付款-一般材積
+//sevenC2C_Payment();// 取貨付款-一般材積
 
-//family();
+family();

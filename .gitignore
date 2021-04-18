@@ -1,6 +1,14 @@
 # Folders to ignore
 node_modules
 .env
+1.png
+2.png
+3.png
+4.png
+5.png
+6.png
+CaptchaImage.png
+
 Thumbs.db
 chromedriver.exe
 CaptchaImage.png
