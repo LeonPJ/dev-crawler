@@ -528,10 +528,18 @@ async function family() {
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="account"]`))).sendKeys(process.env.PHONE_NUMBER);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="password"]`))).sendKeys(process.env.PASSWORD);
     await driver.sleep(1000);
-    let ele = await driver.findElement(By.className('captcha-img'));
+    //let ele = await driver.findElement(By.className('captcha-img'));
     // Captures the element screenshot
-    let encodedString = await ele.takeScreenshot(true);
-    await fs.writeFileSync('./CaptchaImage.png', encodedString, 'base64');
+    //let encodedString = await driver.findElement(By.className('captcha-img')).takeScreenshot(true);
+    //let encodedString = await ele.takeScreenshot(true);//
+    //let encodedString = await driver.findElement(By.className('captcha-img')).takeScreenshot(true);// 對 captcha-img 截圖
+    //await fs.writeFileSync('./CaptchaImage.png', encodedString, 'base64');
+
+    await fs.writeFileSync('./CaptchaImage.png',// 截圖完後儲存成 CaptchaImage.png
+        await driver.findElement(By.className('captcha-img')).takeScreenshot(true)
+        , 'base64');
+
+    // 對圖片解析
     const targetFilename = 'CaptchaImage.png';
     const image = await Jimp.read(targetFilename);
     await image.resize(560, 200).crop(30, 0, 80, 200).write('1.png');
