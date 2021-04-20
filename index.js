@@ -523,23 +523,18 @@ async function sevenC2C_Payment() {
 
 
 async function family() {
+    const alertStatus = 0;// 0 = alert , 1 = no alert
+    //page 01
     const familyPage = 'https://ap.family.com.tw/V3/Member/Login?mem_infoREYI=Ti2s5PMxPhkafJpPPXHbjwRpRu5ZXig48E%2BEWuyaYRwp32UfICUvjdz1cVcTE2IguUwxvpyUVKlS6k2QlbcMfVtzRyVOdgGzjJG05%2Bi41vaVGIBCf2bRyFEUBdCEh%2Bf2jyX9bS3E3lq%2BtCTxvcniLI1Ltuct%2BZtgeScgzoG6nro%3D';// family package value page
     await driver.get(familyPage);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="account"]`))).sendKeys(process.env.PHONE_NUMBER);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="password"]`))).sendKeys(process.env.PASSWORD);
     await driver.sleep(1000);
-    //let ele = await driver.findElement(By.className('captcha-img'));
-    // Captures the element screenshot
-    //let encodedString = await driver.findElement(By.className('captcha-img')).takeScreenshot(true);
-    //let encodedString = await ele.takeScreenshot(true);//
-    //let encodedString = await driver.findElement(By.className('captcha-img')).takeScreenshot(true);// 對 captcha-img 截圖
-    //await fs.writeFileSync('./CaptchaImage.png', encodedString, 'base64');
-
     await fs.writeFileSync('./CaptchaImage.png',// 截圖完後儲存成 CaptchaImage.png
         await driver.findElement(By.className('captcha-img')).takeScreenshot(true)
         , 'base64');
 
-    // 對圖片解析
+    // 圖片解析
     const targetFilename = 'CaptchaImage.png';
     const image = await Jimp.read(targetFilename);
     await image.resize(560, 200).crop(30, 0, 80, 200).write('1.png');
@@ -576,6 +571,60 @@ async function family() {
 
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="captcha"]`))).sendKeys(result);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="btn_login"]`))).click();
+
+    //try {
+    //console.log(await driver.switchTo().alert().getText());
+    //    await driver.switchTo().alert().getText();
+    //    await driver.switchTo().alert().accept();
+    //    await driver.sleep(500);
+    // add func to page 01
+    //} catch (error) {
+    //console.log("SUCCESS!!");
+    //    alertStatus = 1;
+    //}
+    //console.log(alertStatus)
+    //console.log("END!!");
+    //driver.switchTo().alert().getText();
+
+    // page 02
+    await driver.switchTo().frame(0);
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/table/tbody/tr/td[2]/table/tbody/tr[2]/td/form/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr[4]/td/a`))).click();
+
+    // page 03
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/table/tbody/tr/td[2]/table/tbody/tr[2]/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[2]/td/input`))).sendKeys("寄件人姓名");
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/table/tbody/tr/td[2]/table/tbody/tr[2]/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[4]/td/a[2]/img`))).click();
+
+    // page 04
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/table/tbody/tr/td[2]/table/tbody/tr[2]/td/form/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[4]/td/a[2]/img`))).click();
+
+    // page 05
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/table/tbody/tr/td[2]/table/tbody/tr[2]/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[2]/td/input`))).sendKeys("收件人姓名");
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/table/tbody/tr/td[2]/table/tbody/tr[2]/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[4]/td/a[2]/img`))).click();
+
+    // page 06
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/table/tbody/tr/td[2]/table/tbody/tr[2]/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[2]/td/input`))).sendKeys("0912345678");
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/table/tbody/tr/td[2]/table/tbody/tr[2]/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[4]/td/a[2]/img`))).click();
+
+    // page 07 選擇收件超商
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="buttonContentDiv"]/div[2]/a`))).click();// 台北市
+    await driver.sleep(500);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="buttonContentDiv"]/div[6]/a`))).click();// 內湖區
+    await driver.sleep(500);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="buttonContentDiv"]/div[1]/a`))).click();// 內湖路一段
+    await driver.sleep(500);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="content"]/table/tbody/tr[2]/td/table[2]/tbody/tr[1]/td[2]`))).click();// 全家碧湖店
+    await driver.sleep(500);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="ctl00_ContentPlaceHolder1_checkStore"]`))).click();// 確認商店
+    // page 08
+    // can't get DIV#blockDiv item
+    await driver.switchTo().frame(0);
+    //await driver.switchTo().parentFrame();
+    //await driver.wait(until.elementLocated(By.xpath(`realperson-challenge`))).click();
+
+    let ele = await driver.findElement(By.css("DIV#blockDiv"));
+    // Captures the element screenshot
+    let encodedString = await ele.takeScreenshot(true);
+    await fs.writeFileSync('./image.png', encodedString, 'base64');
 
 }
 
