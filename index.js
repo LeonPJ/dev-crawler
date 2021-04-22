@@ -141,7 +141,7 @@ async function sevenC2C() {
         })
     }
 
-    await driver.quit();// close windows
+    //await driver.quit();// close windows
 }
 
 async function sevenLC2C() {
@@ -616,16 +616,14 @@ async function family() {
     await driver.sleep(500);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="ctl00_ContentPlaceHolder1_checkStore"]`))).click();// 確認商店
     // page 08
-    // can't get DIV#blockDiv item
+    await driver.switchTo().parentFrame();// back to parent frame
+    await driver.sleep(500);
     await driver.switchTo().frame(0);
-    //await driver.switchTo().parentFrame();
-    //await driver.wait(until.elementLocated(By.xpath(`realperson-challenge`))).click();
-
-    let ele = await driver.findElement(By.css("DIV#blockDiv"));
-    // Captures the element screenshot
-    let encodedString = await ele.takeScreenshot(true);
-    await fs.writeFileSync('./image.png', encodedString, 'base64');
-
+    console.log("success switch to iframe");
+    let encodedString = await driver.findElement(By.xpath(`//*[@id="blockDiv"]/div/div[1]`)).takeScreenshot(true);
+    await fs.writeFileSync('./num.png', encodedString, 'base64');
+    //console.log(await worker.recognize('num.png'));
+    //await driver.wait(until.elementLocated(By.xpath(`//*[@id="Text1"]`))).sendKeys("123");
 }
 
 
@@ -633,5 +631,4 @@ async function family() {
 //sevenLC2C();// 取貨不付款-120cm材積
 //sevenEC2C();// 取貨不付款-經濟交貨便
 //sevenC2C_Payment();// 取貨付款-一般材積
-
 family();
