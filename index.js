@@ -6,13 +6,36 @@ import QRCode from 'qrcode';
 import Jimp from 'jimp';
 import { createWorker } from 'tesseract.js';
 
-dotenv.config();
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import router from './routes/route.js'
 
-var driver = await new Builder().forBrowser('chrome')
+dotenv.config();
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use('/', router);
+
+mongoose
+    .connect(process.env.CONNECTION_DB, {
+        useCreateIndex: true,
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true,
+    })
+    .then(() => app.listen(process.env.PORT, () => console.log(`Sever running on port: http://localhost:${process.env.PORT}`)))
+    .catch((err) => console.log(err.massage));
+
+mongoose.set('useFindAndModify', false);
+
+/*var driver = await new Builder().forBrowser('chrome')
     //.setChromeOptions(new chrome.Options().addArguments('--headless'))
     .setChromeOptions(new chrome.Options().addArguments())
-    .build();
-
+    .build();*/
+/*
 async function sevenC2C() {
     //let driver = await new webdriver.Builder().forBrowser('chrome').build();
     //await driver.manage().window().setRect({ width: 1200, height: 800, x: 0, y: 0 });// set browser windows size
@@ -140,8 +163,8 @@ async function sevenC2C() {
     }
 
     //await driver.quit();// close windows
-}
-
+}*/
+/*
 async function sevenLC2C() {
     //page 2
     const sevenPage = 'https://myship2.7-11.com.tw/LC2C/Page02';// 取貨-120cm大型包裹
@@ -262,8 +285,8 @@ async function sevenLC2C() {
     }
 
     await driver.quit();// close windows
-}
-
+}*/
+/*
 async function sevenEC2C() {
     const sevenPage = 'https://myship2.7-11.com.tw/EC2C/Page02';// 取貨-經濟型包裹
     await driver.get(sevenPage);
@@ -385,8 +408,8 @@ async function sevenEC2C() {
     }
 
     await driver.quit();// close windows
-}
-
+}*/
+/*
 async function sevenC2C_Payment() {
     const sevenPage = 'https://myship2.7-11.com.tw/C2C_Payment/Page02';// 取貨-經濟型包裹
     await driver.get(sevenPage);
@@ -517,9 +540,9 @@ async function sevenC2C_Payment() {
         })
     }
     await driver.quit();// close windows
-}
+}*/
 
-
+/*
 async function family() {
     const alertStatus = 0;// 0 = alert , 1 = no alert
     //page 01
@@ -622,11 +645,11 @@ async function family() {
     await fs.writeFileSync('./num.png', encodedString, 'base64');
     //console.log(await worker.recognize('num.png'));
     //await driver.wait(until.elementLocated(By.xpath(`//*[@id="Text1"]`))).sendKeys("123");
-}
+}*/
 
 
 //sevenC2C();// 取貨不付款-一般材積
 //sevenLC2C();// 取貨不付款-120cm材積
 //sevenEC2C();// 取貨不付款-經濟交貨便
 //sevenC2C_Payment();// 取貨付款-一般材積
-family();
+//family();
