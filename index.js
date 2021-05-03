@@ -3,9 +3,7 @@ import webdriver, { Builder, By, Key, until } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 import fs from 'fs';
 import QRCode from 'qrcode';
-
 import Jimp from 'jimp';
-
 import { createWorker } from 'tesseract.js';
 
 dotenv.config();
