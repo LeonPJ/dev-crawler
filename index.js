@@ -6,7 +6,7 @@ import QRCode from 'qrcode';
 import Jimp from 'jimp';
 import { createWorker } from 'tesseract.js';
 
-import express from 'express';
+/*import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -29,13 +29,14 @@ mongoose
     .then(() => app.listen(process.env.PORT, () => console.log(`Sever running on port: http://localhost:${process.env.PORT}`)))
     .catch((err) => console.log(err.massage));
 
-mongoose.set('useFindAndModify', false);
+mongoose.set('useFindAndModify', false);*/
 
-/*var driver = await new Builder().forBrowser('chrome')
+
+var driver = await new Builder().forBrowser('chrome')
     //.setChromeOptions(new chrome.Options().addArguments('--headless'))
     .setChromeOptions(new chrome.Options().addArguments())
-    .build();*/
-/*
+    .build();
+
 async function sevenC2C() {
     //let driver = await new webdriver.Builder().forBrowser('chrome').build();
     //await driver.manage().window().setRect({ width: 1200, height: 800, x: 0, y: 0 });// set browser windows size
@@ -163,7 +164,7 @@ async function sevenC2C() {
     }
 
     //await driver.quit();// close windows
-}*/
+}
 /*
 async function sevenLC2C() {
     //page 2
@@ -648,7 +649,7 @@ async function family() {
 }*/
 
 
-//sevenC2C();// 取貨不付款-一般材積
+sevenC2C();// 取貨不付款-一般材積
 //sevenLC2C();// 取貨不付款-120cm材積
 //sevenEC2C();// 取貨不付款-經濟交貨便
 //sevenC2C_Payment();// 取貨付款-一般材積
