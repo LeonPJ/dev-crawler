@@ -39,133 +39,119 @@ var driver = await new Builder().forBrowser('chrome')
 
 async function sevenC2C() {
     //let driver = await new webdriver.Builder().forBrowser('chrome').build();
-    //await driver.manage().window().setRect({ width: 1200, height: 800, x: 0, y: 0 });// set browser windows size
+    /*幾本設定*/
+    await driver.manage().window().setRect({ width: 1200, height: 800, x: 0, y: 0 });// 設定瀏覽器視窗大小
 
-    const sevenPage = 'https://myship2.7-11.com.tw/C2C/Page02';// 7-11 package value page
-    await driver.get(sevenPage);
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`)));// wait page ready
+    await driver.get('https://myship2.7-11.com.tw/C2C/Page02');// 物流網站
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`)));
 
-    //page 02
-    await driver.findElement(By.xpath('//*[@id="shippingValue"]')).click();// open select
-    await driver.findElement(By.xpath('//*[@id="shippingValue"]/option[2]')).click();// select 1000
+    /*page 03*/
+    await driver.findElement(By.xpath('//*[@id="shippingValue"]')).click();// 點選 option 選單
+    await driver.findElement(By.xpath('//*[@id="shippingValue"]/option[2]')).click();// 選擇 包裹價值範圍
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="orderAmount"]`))).sendKeys("1000");// 輸入包裹價值
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`))).click();
 
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="orderAmount"]`))).sendKeys("1000");// enter price
-
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`))).click();// next page
-
-    //page 03
+    /*page 04*/
     await driver.wait(until.elementLocated(By.xpath(`/html/body/div/div[2]/div[1]`)));
-    //寄件人姓名
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderName"]`))).sendKeys("寄件人測試");
-    //寄件人手機
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderPhone"]`))).sendKeys("0912345678");
-    //寄件人mail
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderEmail"]`))).sendKeys("receive@gmail.com");
-    const parentWindow = await driver.getWindowHandle();// 起始主視窗ID
+
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderName"]`))).sendKeys("寄件人測試");// 寄件人姓名
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderPhone"]`))).sendKeys("0912345678");// 寄件人手機
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="senderEmail"]`))).sendKeys("receive@gmail.com");// 寄件人mail
+
+    const parentWindowID = await driver.getWindowHandle();// 取得父視窗 ID
+    /**退貨超商**/
     //console.log("first main: " + parentWindow);
-    // 退貨門市視窗
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="checkStore"]`))).click();
-
-    await driver.wait(async () => (await driver.getAllWindowHandles()).length === 2);//確認是否開啟第二個視窗
-
-    const windows = await driver.getAllWindowHandles();// 抓取所有視窗ID
-    windows.forEach(async handle => {
-        if (handle !== parentWindow) {
-            await driver.switchTo().window(handle);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="checkStore"]`))).click();// 退貨門市視窗
+    await driver.wait(async () => (await driver.getAllWindowHandles()).length === 2);// 確認當前是否開啟兩個視窗
+    const senderAllWindowsID = await driver.getAllWindowHandles();// 取得所有視窗 ID
+    senderAllWindowsID.forEach(async handle => {
+        if (handle !== senderAllWindowsID) {
+            await driver.switchTo().window(handle); // 移至子視窗
             //console.log("first sub: " + handle);
         }
     });
-
-    // 退貨門市選擇
-    await driver.wait(until.titleIs('電子地圖查詢系統'));// 等待 電子地圖查詢系統
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="byID"]/a`))).click();// 門市店號
-
-    await driver.sleep(500);
-    await driver.switchTo().frame(0);// Switches to the first frame
+    /***退貨門市選擇***/
+    //await driver.wait(until.titleIs('電子地圖查詢系統'));// 等待 電子地圖查詢系統 出現
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="byID"]/a`))).click();// 移至 門市店號
+    await driver.sleep(1000);
+    await driver.switchTo().frame(0);// 切換 frame
     await driver.wait(until.elementLocated(By.id(`storeIDKey`))).sendKeys("148133");
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="send"]`))).click();
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="ol_stores"]/li`))).click();
     await driver.switchTo().parentFrame();
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="sevenDataBtn"]`))).click();
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="AcceptBtn"]`)));
-    await driver.sleep(500);
+    await driver.sleep(1000);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="AcceptBtn"]`))).click();
-    await driver.sleep(500);
+    await driver.sleep(1000);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="submit_butn"]`))).click();
-    await driver.switchTo().window(parentWindow);// back to main window
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`))).click();// next page
+    await driver.switchTo().window(parentWindowID);// 移至父視窗
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`))).click();
 
-    // page 04
-    await driver.wait(until.elementLocated(By.xpath(`/html/body/div[1]/div[2]/div[2]/div/div[1]/div[1]`)));
+    /*page 05*/
+    await driver.wait(until.elementLocated(By.xpath(`/html/body/div[1]/div[2]/div[2]/div/div[1]/div[1]`)));//
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="receiverName"]`))).sendKeys("收件人測試");
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="receiverPhone"]`))).sendKeys("0987654321");
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="receiverEmail"]`))).sendKeys("send@gmail.com");
 
-    //parentWindow = await driver.getWindowHandle();// 起始主視窗ID
-    //console.log("second main: " + parentWindow);
+    /**收貨超商**/
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="checkStore"]`))).click();// 收件門市
-
     await driver.wait(async () => (await driver.getAllWindowHandles()).length === 2);//確認是否開啟第二個視窗
-    //console.log("success to page 4");
-    const sWindows = await driver.getAllWindowHandles();
-    sWindows.forEach(async handle => {
-        if (handle !== parentWindow) {
+    const receiverAllWindowsID = await driver.getAllWindowHandles();// 取得所有視窗 ID
+    receiverAllWindowsID.forEach(async handle => {
+        if (handle !== parentWindowID) {
             await driver.switchTo().window(handle);
             //console.log("second sub: " + handle);
         }
     });
-    await driver.wait(until.titleIs('電子地圖查詢系統'));// 等待 電子地圖查詢系統
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="byID"]/a`))).click();// 門市店號
-
-    await driver.sleep(500);
-    await driver.switchTo().frame(0);// Switches to the first frame
+    /***收貨門市選擇***/
+    //await driver.wait(until.titleIs('電子地圖查詢系統'));
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="byID"]/a`))).click();
+    await driver.sleep(1000);
+    await driver.switchTo().frame(0);
     await driver.wait(until.elementLocated(By.id(`storeIDKey`))).sendKeys("948502");
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="send"]`))).click();
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="ol_stores"]/li`))).click();
     await driver.switchTo().parentFrame();
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="sevenDataBtn"]`))).click();
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="AcceptBtn"]`)));
-    await driver.sleep(500);
+    await driver.sleep(1000);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="AcceptBtn"]`))).click();
-    await driver.sleep(500);
+    await driver.sleep(1000);
     await driver.wait(until.elementLocated(By.xpath(`//*[@id="submit_butn"]`))).click();
-    await driver.switchTo().window(parentWindow);// back to main window
+    await driver.switchTo().window(parentWindowID);
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`))).click();
 
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="nextStep"]`))).click();// next page
+    /*page 06*/
+    /**寄件與收件基本資訊**/
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="printOrder"]`))).click();
 
-    //page 05
-    await driver.wait(until.elementLocated(By.xpath(`//*[@id="printOrder"]`))).click();// 取得貨物代碼
+    /**寄件與物流代碼**/
+    await driver.wait(until.elementLocated(By.xpath(`//*[@id="PrintOK"]`))).click();
+    await driver.wait(async () => (await driver.getAllWindowHandles()).length === 2);
+    const numberAllWindowsID = await driver.getAllWindowHandles();
+    numberAllWindowsID.forEach(async handle => {
+        if (handle !== parentWindowID) {
+            await driver.switchTo().window(handle);
+            //console.log("second sub: " + handle);
+        }
+    });
+    const shipNumber = await driver.wait(until.elementLocated(By.id('lblC2BPinCode1'))).getAttribute('innerHTML');// 取得 寄件號碼
+    console.log(shipNumber);
+    const trackNumber = await driver.wait(until.elementLocated(By.id('lblBarCode4'))).getAttribute('innerHTML');// 取得 物流號碼
+    console.log(trackNumber);
 
-    const trackNumber = await driver.wait(until.elementLocated(By.id('pinno'))).getAttribute('innerHTML');
-    //console.log(trackNumber);
-    if (trackNumber != "取號中.") {
-        //fs.appendFile()
-        fs.readFile('trackNumberList.txt', function (err, data) {// 檢查是否有 trackNumberList.txt
-            if (err) {
-                fs.writeFile('trackNumberList.txt', trackNumber + '\r\n', function (err) {// 建立 trackNumberList
-                    if (err) throw err
-                    console.log("new file create and track number save success!!");
-                });
-            } else {
-                fs.appendFile('trackNumberList.txt', trackNumber + '\r\n', function (err) {// 新增資料至 trackNumberList
-                    if (err) throw err
-                    console.log("track number save success!!");
-                });
-            }
-        });
-        QRCode.toFile('./' + 'QRCode-' + trackNumber + '.png', trackNumber, {//QRCode picture
-            color: {
-                dark: '#000'// QRCode color
-            }
-        }, function (err) {
-            if (err) throw err
-            console.log('QRCode create success!!')
-        })
-    }
-
+    QRCode.toFile('./' + 'QRCode-' + shipNumber + '.png', shipNumber, {// 製作 QRCode
+        color: {
+            dark: '#000'// QRCode 顏色
+        }
+    }, function (err) {
+        if (err) throw err
+        //console.log('QRCode create success!!')
+    })
     //await driver.quit();// close windows
 }
-/*
+
 async function sevenLC2C() {
     //page 2
     const sevenPage = 'https://myship2.7-11.com.tw/LC2C/Page02';// 取貨-120cm大型包裹
@@ -286,8 +272,8 @@ async function sevenLC2C() {
     }
 
     await driver.quit();// close windows
-}*/
-/*
+}
+
 async function sevenEC2C() {
     const sevenPage = 'https://myship2.7-11.com.tw/EC2C/Page02';// 取貨-經濟型包裹
     await driver.get(sevenPage);
@@ -409,8 +395,8 @@ async function sevenEC2C() {
     }
 
     await driver.quit();// close windows
-}*/
-/*
+}
+
 async function sevenC2C_Payment() {
     const sevenPage = 'https://myship2.7-11.com.tw/C2C_Payment/Page02';// 取貨-經濟型包裹
     await driver.get(sevenPage);
@@ -541,9 +527,9 @@ async function sevenC2C_Payment() {
         })
     }
     await driver.quit();// close windows
-}*/
+}
 
-/*
+
 async function family() {
     const alertStatus = 0;// 0 = alert , 1 = no alert
     //page 01
@@ -646,7 +632,7 @@ async function family() {
     await fs.writeFileSync('./num.png', encodedString, 'base64');
     //console.log(await worker.recognize('num.png'));
     //await driver.wait(until.elementLocated(By.xpath(`//*[@id="Text1"]`))).sendKeys("123");
-}*/
+}
 
 
 sevenC2C();// 取貨不付款-一般材積
