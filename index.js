@@ -141,7 +141,7 @@ async function sevenC2C() {
     const trackNumber = await driver.wait(until.elementLocated(By.id('lblBarCode4'))).getAttribute('innerHTML');// 取得 物流號碼
     console.log(trackNumber);
 
-    QRCode.toFile('./' + 'QRCode-' + shipNumber + '.png', shipNumber, {// 製作 QRCode
+    QRCode.toFile('./' + 'QRCode-' + shipNumber + '.png', shipNumber, {// QRCode 製作
         color: {
             dark: '#000'// QRCode 顏色
         }
